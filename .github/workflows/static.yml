@@ -33,27 +33,27 @@ jobs:
       
       - name: Enable GitHub Pages via API
         run: |
+          # Try to enable GitHub Pages (will fail if already enabled, which is fine)
           curl -L \
             -X POST \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             -H "X-GitHub-Api-Version: 2026-03-10" \
             https://api.github.com/repos/${{ github.repository }}/pages \
-            -d '{"source":{"branch":"main","path":"/"}}'
+            -d '{"source":{"branch":"main","path":"/"}}' || true
       
       - name: Wait for Pages to initialize
         run: sleep 10
       
       - name: Setup Pages
         uses: actions/configure-pages@v5
+      
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
+          # Upload entire repository
           path: '.'
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
-          path: '.'
+      
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
